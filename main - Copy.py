@@ -227,17 +227,23 @@ def main():
         text()
         
         # for Level 2
-        if Distance > 3:
+        if Distance > 5 and Distance < 10:
+            Obs3.move(4)
+            Obs4.move(5)
             Obs5.move(5)
             Obs6.move(6)
-        '''
+        
         # for Level 3
-        if Distance >= 5:
+        if Distance >= 10:
+            Obs1.move(3)
+            Obs2.move(4)
+            Obs3.move(5)
+            Obs4.move(6)
             Obs5.move(7)
             Obs6.move(8)
             Obs7.slant_move(4)
             Obs8.slant_move(5)              
-        '''    
+              
                 
         # collision
         if pygame.sprite.spritecollideany(playerCar, obstacle_sprite_group):
