@@ -36,11 +36,13 @@ bg_y2 = 700
 # to write the score
 Distance, Hits = 0,0
 start_time = int(time.time())
+closeCalls = 0
 
 def main():
-    global Distance # so that I can use it 
+    global Distance # so that I can use it
+    global closeCalls
     # to write the score
-    Distance, Hits = 0,0
+    Distance, Hits,closeCalls = 0,0,0.0
     
         
     # upload back ground
@@ -72,6 +74,7 @@ def main():
             
     obstacle_sprite_group = pygame.sprite.Group()
 
+    
     obstacle_sprite_group.add(Obs1)
     obstacle_sprite_group.add(Obs2)
     obstacle_sprite_group.add(Obs3)
@@ -98,10 +101,14 @@ def main():
 
 
     def text():
-        global Distance, Hits, start_time, current_time
+        global TimeElapsed, Hits, start_time, current_time,closeCalls
         
+
+        #if(Obs1.rect.width // 2 >0):
+            #print(Obs1.rect.width //2)
+            
         current_time = int(time.time())
-        Distance = current_time - start_time
+        TimeElapsed = current_time - start_time
         
         #Title board
         font= pygame.font.SysFont('CalibriBold', 50, False, False)
@@ -110,13 +117,18 @@ def main():
         
         #Score board
         font= pygame.font.SysFont('Calibri', 25, False, False) # font for score board
-        text2 = font.render("Distance = " + str(Distance), True, WHITE)
+        text2 = font.render("TimeElapsed = " + str(TimeElapsed), True, WHITE)
         screen.blit(text2,[SCREEN_LENGTH - 200,30])
         
         text3 = font.render("Hits = " + str(Hits), True, WHITE)
         screen.blit(text3,[SCREEN_LENGTH - 200,10])
 
-        return Distance
+        #closeCalls
+        font= pygame.font.SysFont('Calibri', 25, False, False)
+        text4 = font.render("CloseCallBONUS= " +str(closeCalls),True, WHITE)
+        screen.blit(text4,[SCREEN_LENGTH - 250,60])
+
+        return TimeElapsed
 
 
 
@@ -187,6 +199,7 @@ def main():
     #STANDARD game loop
 
     ZigZagSpeed = 5 # for level 3
+    carSpeed = 5
     global pause
     run = True
     while run:
@@ -204,61 +217,104 @@ def main():
         # to change the position of the player
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            playerCar.moveLeft(3)
+            playerCar.moveLeft(carSpeed)
         if keys[pygame.K_RIGHT]:
-            playerCar.moveRight(3)
+            playerCar.moveRight(carSpeed)
         if keys[pygame.K_UP]:
-            playerCar.moveForward(3)
+            playerCar.moveForward(carSpeed)
         if keys[pygame.K_DOWN]:
-            playerCar.moveBackward(3)
+            playerCar.moveBackward(carSpeed)
+
         # to change the speed if required
         if keys[pygame.K_LCTRL]:
-            speed -= 0.05
+            carSpeed -= 0.05
         if keys[pygame.K_LSHIFT]:
-            speed += 0.05
+            carSpeed += 0.05
 
-
-
-        # change obstacle co-ordinates
-        if Distance <= 2:
-            Obs1.move(3)
-            Obs2.move(3)
-            Obs3.move(3)
-            Obs4.move(3)
 
         # call text function                  
         text()
-        
+
+        #PlayerCar's mid point in Vector form
+        vect1 = pygame.math.Vector2((playerCar.rect.x+(45//2),playerCar.rect.y+(70//2))) 
+
+        # change obstacle co-ordinates
+        if TimeElapsed <= 10:
+            a= pygame.math.Vector2(Obs1.move(3))
+            b= pygame.math.Vector2(Obs2.move(3))
+            c= pygame.math.Vector2(Obs3.move(3))
+            d= pygame.math.Vector2(Obs4.move(3))
+
+            obs_list= [a,b,c,d] #list of pygame's Vector2
+            for vect2 in obs_list:
+                #if car is not colliding(False) and the closeCall condidtion is met then, Increment Bonus score
+                if(pygame.sprite.spritecollideany(playerCar, obstacle_sprite_group)):
+                    break
+                elif(vect1.distance_to(vect2) < 65): #closeCall condition
+                    closeCalls += 0.0005
+                    print(closeCalls)
+                    
+
         # for Level 2
-        if Distance > 2 and Distance < 4:
-            Obs1.move(3)
-            Obs2.move(3)
-            Obs3.move(4)
-            Obs4.move(5)
-            Obs5.move(5)
-            Obs6.move(6)
+        if TimeElapsed > 10 and TimeElapsed < 20:
+            # Obs1.move(3)
+            # Obs2.move(3)
+            # Obs3.move(4)
+            # Obs4.move(5)
+            # Obs5.move(5)
+            # Obs6.move(6)
+            a= pygame.math.Vector2(Obs1.move(3))
+            b= pygame.math.Vector2(Obs2.move(3))
+            c= pygame.math.Vector2(Obs3.move(4))
+            d= pygame.math.Vector2(Obs4.move(5))
+            e= pygame.math.Vector2(Obs5.move(5))
+            f= pygame.math.Vector2(Obs6.move(6))
+
+            obs_list= [a,b,c,d,e,f]
+            for vect2 in obs_list:
+                for vect2 in obs_list:
+                    #if car is not colliding(False) and the closeCall condidtion is met then, Increment Bonus score
+                    if(pygame.sprite.spritecollideany(playerCar, obstacle_sprite_group)):
+                        break
+                    elif(vect1.distance_to(vect2) < 65): #closeCall condition
+                        closeCalls += 0.005 #Increment Score faster in LEVEL-2
+                        print(closeCalls)
+            
         
         # for Level 3
-        if Distance >= 4:
-            Obs1.move(3)
-            Obs2.move(4)
-            Obs3.move(5)
-            Obs4.move(6)
-            Obs5.move(7)
-            Obs6.move(8)
+        if TimeElapsed >= 20:
+        
+            a= pygame.math.Vector2(Obs1.move(3))
+            b= pygame.math.Vector2(Obs2.move(4))
+            c= pygame.math.Vector2(Obs3.move(5))
+            d= pygame.math.Vector2(Obs4.move(6))
+            e= pygame.math.Vector2(Obs5.move(7))
+            f= pygame.math.Vector2(Obs6.move(8))
             ZigZagSpeed = Obs7.slant_move(ZigZagSpeed)
-            ZigZagSpeed = Obs8.slant_move(ZigZagSpeed)              
+            ZigZagSpeed = Obs8.slant_move(ZigZagSpeed) 
+
+            obs_list= [a,b,c,d,e,f]
+            for vect2 in obs_list:
+                for vect2 in obs_list:
+                    #if car is not colliding(False) and the closeCall condidtion is met then, Increment Bonus score
+                    if(pygame.sprite.spritecollideany(playerCar, obstacle_sprite_group)):
+                        break
+                    elif(vect1.distance_to(vect2) < 65): #closeCall condition 
+                        closeCalls += 0.05 #Increment Score faster in LEVEL-3
+                        print(closeCalls)
             
-                
-        # collision
+
+        #collision 
         if pygame.sprite.spritecollideany(playerCar, obstacle_sprite_group):
+            
             pause=True 
             #Instruction board
             question()
             paused()
+            # all_sprites_list.empty();
 
         # draw the sprites
-        all_sprites_list.update()
+        all_sprites_list.update() 
         all_sprites_list.draw(screen)
 
         #STANDARD speed of loop

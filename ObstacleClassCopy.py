@@ -53,6 +53,8 @@ class Obstacle(pygame.sprite.Sprite):
             # to draw a rectangle around the obstacles
             pygame.draw.rect(self.image, RED, [0, 0, self.rect.width, self.rect.height], 3)
 
+        #50 is the width and the height of Obstacle'ss rect
+        return (self.rect.x+(50//2),self.rect.y+(50//2))# returning the mid point of Obstacles's rect, to compare the distance for closeCalls 
            
     # causes obstacles to move in a zig-zag manner    
     def slant_move(self,speed):
