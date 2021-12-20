@@ -15,14 +15,14 @@ class Obstacle(pygame.sprite.Sprite):
         self.height = SCREEN_HEIGHT
 
         # re uploading a image for obstacle so that it changes for every cycle 
-        image1 = pygame.image.load("Obs1.png").convert_alpha()
-        image2 = pygame.image.load("Obs2.png").convert_alpha()
-        image3 = pygame.image.load("Obs3.png").convert_alpha()
-        image4 = pygame.image.load("Obs4.png").convert_alpha()
-        image5 = pygame.image.load("Obs5.png").convert_alpha()
-        image6 = pygame.image.load("Obs6.png").convert_alpha()
-        image7 = pygame.image.load("Obs7.png").convert_alpha()
-        image8 = pygame.image.load("Obs8.png").convert_alpha()
+        image1 = pygame.image.load("obstacles/Obs1.png").convert_alpha()
+        image2 = pygame.image.load("obstacles/Obs2.png").convert_alpha()
+        image3 = pygame.image.load("obstacles/Obs3.png").convert_alpha()
+        image4 = pygame.image.load("obstacles/Obs4.png").convert_alpha()
+        image5 = pygame.image.load("obstacles/Obs5.png").convert_alpha()
+        image6 = pygame.image.load("obstacles/Obs6.png").convert_alpha()
+        image7 = pygame.image.load("obstacles/Obs7.png").convert_alpha()
+        image8 = pygame.image.load("obstacles/Obs8.png").convert_alpha()
         image_obstacle = []
         image_obstacle.append(image1)
         image_obstacle.append(image2)

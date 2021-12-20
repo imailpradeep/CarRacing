@@ -36,7 +36,8 @@ bg_y2 = 700
 # to write the score
 Distance, Hits = 0,0
 start_time = int(time.time())
-closeCalls = 0
+
+
 
 def main():
     global Distance # so that I can use it
@@ -46,13 +47,13 @@ def main():
     
         
     # upload back ground
-    background = pygame.image.load("background.jpg").convert_alpha()
+    background = pygame.image.load("backgrounds/forest.jpg").convert_alpha()
     background = pygame.transform.scale(background, (SCREEN_LENGTH,SCREEN_HEIGHT))
     # background image
     screen.blit(background, (0, 0))
 
     # STANDARD load images and resize thems
-    car = pygame.image.load("car1.png")
+    car = pygame.image.load("PlayerCars/car1.png")
     #car = pygame.transform.scale(car, (70, 70))
     # STANDARD set icon on the window
     pygame.display.set_icon(car)
@@ -98,6 +99,38 @@ def main():
     all_sprites_list.add(Obs6)
     all_sprites_list.add(Obs7)
     all_sprites_list.add(Obs8)
+
+    #to animate the stearing of car
+    global position
+    position = 9 #this is the rest position of steering in our case
+    wheelList= []
+
+    wheelList.append(pygame.image.load('steerings/steer9L.png'))
+    wheelList.append(pygame.image.load('steerings/steer8L.png'))
+    wheelList.append(pygame.image.load('steerings/steer7L.png'))
+    wheelList.append(pygame.image.load('steerings/steer6L.png'))
+    wheelList.append(pygame.image.load('steerings/steer5L.png'))
+    wheelList.append(pygame.image.load('steerings/steer4L.png'))
+    wheelList.append(pygame.image.load('steerings/steer3L.png'))
+    wheelList.append(pygame.image.load('steerings/steer2L.png'))
+    wheelList.append(pygame.image.load('steerings/steer1L.png'))
+    wheelList.append(pygame.image.load('steerings/steer.png'))
+    wheelList.append(pygame.image.load('steerings/steer1R.png'))
+    wheelList.append(pygame.image.load('steerings/steer2R.png'))
+    wheelList.append(pygame.image.load('steerings/steer3R.png'))
+    wheelList.append(pygame.image.load('steerings/steer4R.png'))
+    wheelList.append(pygame.image.load('steerings/steer5R.png'))
+    wheelList.append(pygame.image.load('steerings/steer6R.png'))
+    wheelList.append(pygame.image.load('steerings/steer7R.png'))
+    wheelList.append(pygame.image.load('steerings/steer8R.png'))
+    wheelList.append(pygame.image.load('steerings/steer9R.png'))
+
+    def releasedStearing(): #when not holding either LEFT or RIGHT key to stear the car, then stear should get back to start state
+        global position
+        if(position < 9):
+            position += 0.25
+        if(position > 9):
+            position -= 0.25
 
 
     def text():
@@ -148,6 +181,8 @@ def main():
         
         
 
+    
+            
     # STANDARD quit function           
     def quit():
         for event in pygame.event.get():
@@ -214,12 +249,30 @@ def main():
         pygame.draw.rect(screen, WHITE,(int(SCREEN_LENGTH*3/5), 0, 3 ,SCREEN_HEIGHT))
 
         
-        # to change the position of the player
+        # to change the position of the car
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            playerCar.moveLeft(carSpeed)
-        if keys[pygame.K_RIGHT]:
-            playerCar.moveRight(carSpeed)
+
+        #animate the steering and change the position of car
+        if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]:
+            if keys[pygame.K_LEFT]:
+                playerCar.moveLeft(carSpeed)
+                if position > 0:
+                    position -= 0.25
+                else:#limit/stop the steering wheel rotation
+                    position = 0
+                    
+            elif keys[pygame.K_RIGHT]:
+                playerCar.moveRight(carSpeed)
+                if position < len(wheelList)-1:
+                    position += 0.25
+                else:#limit/stop the steering wheel rotation
+                    position = len(wheelList)-1
+
+        else:#else: get back to initial state of steering wheel
+            releasedStearing()
+
+
+
         if keys[pygame.K_UP]:
             playerCar.moveForward(carSpeed)
         if keys[pygame.K_DOWN]:
@@ -317,6 +370,10 @@ def main():
         all_sprites_list.update() 
         all_sprites_list.draw(screen)
 
+        #draw the steer, using "int" to slow down the animation speed
+        #e.g, int(0.1) to int(0.9)=0, we will get a new int value after 9th loop(helps to slow animation speed)
+        screen.blit(pygame.transform.scale(wheelList[int(position)],(80,80)),(600,600))
+        
         #STANDARD speed of loop
         clock.tick(FPS)
 
