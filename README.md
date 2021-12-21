@@ -1,5 +1,6 @@
 # CarRacing
 
-Added Close-Calls(if the user passes the obstacle like a thug, then BonusScore will be given) and just Changed the Variable name "Distance" to "TimeElapsed"
-
+1- Added Close-Calls
+2- var "Distance" to "TimeElapsed"
+3- Animated Steering wheel 
 
