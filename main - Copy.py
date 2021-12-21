@@ -128,10 +128,9 @@ def main():
     def releasedStearing(): #when not holding either LEFT or RIGHT key to stear the car, then stear should get back to start state
         global position
         if(position < 9):
-            position += 0.25
+            position += 0.20
         if(position > 9):
-            position -= 0.25
-
+            position -= 0.20
 
     def text():
         global TimeElapsed, Hits, start_time, current_time,closeCalls
